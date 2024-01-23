@@ -10,16 +10,16 @@ author:
     orcid: 0009-0003-7216-6931
     email: pkwaxy@yahoo.com
     affiliation: 
-        name: ETH Zurich
-        url: https://ethz.ch/de.html
+        name: KNUST
+        url: https://www.knust.edu.gh/
 abstract: 
   This hydrogeological study represents a meticulous exploration of collected data through an extensive analytical phase employing advanced statistical methods. The utilization of regression analysis has enabled the modeling of intricate relationships, providing quantitative insights into phenomena such as the impact of borehole depth on specific capacity and the correlation between transmissivity and pumping rates. Correlation analyses have further revealed associations among various hydrogeological parameters, shedding light on the influence of geological formations on transmissivity and the interdependence between drawdown and pumping rates. Additionally, time series analysis and trend analyses have been instrumental in uncovering temporal trends in groundwater levels and drawdown, facilitating a comprehensive understanding of how aquifers respond to seasonal changes. This project's findings contribute significantly to the broader understanding of hydrogeological dynamics, offering valuable insights for sustainable water resource management and informed decision-making in the realm of groundwater exploration and utilization.
 license: "CC BY"
 citation: 
-  container-title: My Blog
-  url: https://www.example.com
-bibliography: /cloud/project/references.bib
-csl: /cloud/project/apa.csl
+  container-title: Unveiling Hydrogeological Dynamics; Advanced Statistical Analysis for Sustainable Groundwater Management.
+  url: https://ds4owd-001.github.io/project-Benedict-89/
+bibliography: references.bib
+csl: apa.csl
 date: today
 execute:
   warning: false
@@ -179,11 +179,10 @@ library(readr)
 ```{r}
 
 #read the data from the excel file 
-read_xlsx("/cloud/project/data/raw/boreholes-Benedict-89.xlsx")
+read_excel(here::here("data/raw/boreholes-Benedict-89.xlsx"))
 
 #save data as borehole_data
-borehole_data <- read_excel("/cloud/project/data/raw/boreholes-Benedict-89.xlsx")
-
+borehole_data <- read_excel(here::here("data/raw/boreholes-Benedict-89.xlsx"))
 
 ```
 
@@ -426,7 +425,7 @@ transformed_data_long <- transformed_data |>
 library(tidyverse)
 
 # Import dictionary.csv
-raw_data <- read_csv("/cloud/project/data/processed/dictionary.csv")
+raw_data <- read_csv(here::here("data/processed/dictionary.csv"))
 
 # Create a data frame for dictionary.csv
 dictionary_data <- data.frame(
@@ -477,8 +476,23 @@ processed_data |>
   )
   
 
-# Save the processed data as a CSV file in the data/processed folder
-write_csv(processed_data, "/cloud/project/data/processed/processed_data.csv")
+
+# Load the 'here' package
+library(here)
+library(readr)
+
+
+# Generate the path using here()
+new_processed_data <- here("data", "processed", "processed_data.csv")
+
+# Ensure the directory exists
+if (!dir.exists(dirname(new_processed_data))) {
+  dir.create(dirname(new_processed_data), recursive = TRUE)
+}
+
+
+# Write the CSV file using here()
+readr::write_csv(processed_data, new_processed_data)
 ```
 
 # 4. Results and Discussion
