@@ -1,0 +1,9 @@
+variable_name,description
+date,date_of_observation
+region,region_of_observation
+community,community_of_observation
+depth,depth_of_well
+water_level,static_water_level
+pump_rate,pumping_rate
+drawdown,drawdown_of_water_level
+material,material_of_aquifer

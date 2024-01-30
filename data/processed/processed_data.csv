@@ -1,0 +1,4 @@
+date_of_observation,region_of_observation,community_of_observation,depth_of_well_m,static_water_level_m,pumping_rate_l_min,drawdown_of_water_level_m,material_of_aquifer
+2001-01-01,Greater_Accra,Agbleazaa,10,5,20,2,Schist
+2001-01-02,Greater_Accra,La_Court,15,8,25,3,Gneiss
+2001-01-03,Ashanti,Kotei,20,12,30,4,Schist

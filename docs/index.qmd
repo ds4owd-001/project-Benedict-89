@@ -10,16 +10,16 @@ author:
     orcid: 0009-0003-7216-6931
     email: pkwaxy@yahoo.com
     affiliation: 
-        name: ETH Zurich
-        url: https://ethz.ch/de.html
+        name: KNUST
+        url: https://www.knust.edu.gh/
 abstract: 
   This hydrogeological study represents a meticulous exploration of collected data through an extensive analytical phase employing advanced statistical methods. The utilization of regression analysis has enabled the modeling of intricate relationships, providing quantitative insights into phenomena such as the impact of borehole depth on specific capacity and the correlation between transmissivity and pumping rates. Correlation analyses have further revealed associations among various hydrogeological parameters, shedding light on the influence of geological formations on transmissivity and the interdependence between drawdown and pumping rates. Additionally, time series analysis and trend analyses have been instrumental in uncovering temporal trends in groundwater levels and drawdown, facilitating a comprehensive understanding of how aquifers respond to seasonal changes. This project's findings contribute significantly to the broader understanding of hydrogeological dynamics, offering valuable insights for sustainable water resource management and informed decision-making in the realm of groundwater exploration and utilization.
 license: "CC BY"
 citation: 
-  container-title: My Blog
-  url: https://www.example.com
-bibliography: /cloud/project/references.bib
-csl: /cloud/project/apa.csl
+  container-title: Unveiling Hydrogeological Dynamics; Advanced Statistical Analysis for Sustainable Groundwater Management.
+  url: https://ds4owd-001.github.io/project-Benedict-89/
+bibliography: references.bib
+csl: apa.csl
 date: today
 execute:
   warning: false
@@ -32,15 +32,15 @@ editor: visual
 
 ## 1.1. Background
 
-Groundwater, a vital component of Earth's hydrological cycle, plays a pivotal role in sustaining human societies, particularly in regions where surface water sources are scarce or unreliable. The study focuses on the Greater Accra and Ashanti regions, where systematic borehole data collection provides a unique opportunity to delve into the hydrogeological complexities shaping water availability. The significance of groundwater in supporting domestic, agricultural, and industrial needs underscores the importance of understanding its dynamics for informed decision-making.
+Groundwater, a vital component of Earth's hydrological cycle, plays a pivotal role in sustaining human societies, particularly in regions where surface water sources are scarce or unreliable. The study focuses on the Greater Accra and Ashanti regions of Ghana, where systematic borehole data collection provides a unique opportunity to delve into the hydrogeological complexities shaping water availability. The significance of groundwater in supporting domestic, agricultural, and industrial needs underscores the importance of understanding its dynamics for informed decision-making.
 
 ## 1.2. Problem Statement
 
-The Greater Accra and Ashanti regions face a multifaceted challenge in sustainable water resource management characterized by an inadequate understanding of aquifer characteristics, limited insight into temporal variations in groundwater levels, an unexplored influence of aquifer material on hydrogeological parameters, a lack of evidence-based decision support, and persistent challenges in community water access. This collective deficiency underscores a critical gap in knowledge, hindering effective policies and strategies for preserving and managing groundwater resources. Consequently, a comprehensive study is imperative to address these knowledge gaps and provide essential insights for informed decision-making, ensuring the sustainable utilization and conservation of groundwater in these regions.
+The Greater Accra and Ashanti regions of Ghana face a multifaceted challenge in sustainable water resource management characterized by an inadequate understanding of aquifer characteristics, limited insight into temporal variations in groundwater levels, an unexplored influence of aquifer material on hydrogeological parameters, a lack of evidence-based decision support, and persistent challenges in community water access. This collective deficiency underscores a critical gap in knowledge, hindering effective policies and strategies for preserving and managing groundwater resources. Consequently, a comprehensive study is imperative to address these knowledge gaps and provide essential insights for informed decision-making, ensuring the sustainable utilization and conservation of groundwater in these regions.
 
 ## 1.3. Objectives
 
--   To systematically analyze borehole data to comprehensively understand the characteristics of aquifers in the Greater Accra and Ashanti regions, including depth, static water level, and geological composition.
+-   To systematically analyze borehole data to comprehensively understand the characteristics of aquifers in the Greater Accra and Ashanti regions of Ghana, including depth, static water level, and geological composition.
 
 -   To investigate seasonal fluctuations and long-term trends in groundwater levels over the specified time period to enhance our understanding of temporal dynamics.
 
@@ -50,7 +50,7 @@ The Greater Accra and Ashanti regions face a multifaceted challenge in sustainab
 
 ## 1.4. Scope and Significance
 
-The project, which encompasses communities within the Greater Accra and Ashanti regions, ensures a diverse representation of hydrogeological conditions. The insights gained from this study extend beyond academic realms, holding practical implications for community water access, infrastructure development, and regional water resource planning. The significance of this research lies in its potential to inform policies that balance water utilization with the preservation of aquifer integrity.
+The project, which encompasses communities within the Greater Accra and Ashanti regions of Ghana, ensures a diverse representation of hydrogeological conditions. The insights gained from this study extend beyond academic realms, holding practical implications for community water access, infrastructure development, and regional water resource planning. The significance of this research lies in its potential to inform policies that balance water utilization with the preservation of aquifer integrity.
 
 # 2. Literature Review
 
@@ -174,16 +174,15 @@ library(readr)
 
 ```
 
-**3.4.2.2. Import**
+#### **3.4.2.2. Import**
 
 ```{r}
 
 #read the data from the excel file 
-read_xlsx("/cloud/project/data/raw/boreholes-Benedict-89.xlsx")
+read_excel(here::here("data/raw/boreholes-Benedict-89.xlsx"))
 
 #save data as borehole_data
-borehole_data <- read_excel("/cloud/project/data/raw/boreholes-Benedict-89.xlsx")
-
+borehole_data <- read_excel(here::here("data/raw/boreholes-Benedict-89.xlsx"))
 
 ```
 
@@ -405,6 +404,95 @@ transformed_data_lvl <- transformed_data |>
          rock_type = factor(rock_type, levels = levels_rock_type),
          region = factor(region, levels = c("Greater Accra", "Ashanti"))
          ) 
+```
+
+#### 3.4.2.7. Data Pivoting
+
+```{r}
+transformed_data_long <- transformed_data |> 
+  mutate(depth_m = as.numeric(as.character(depth_m))) |> 
+  pivot_longer(
+    cols = c(depth_m:transmissivity_m3_day),
+    names_to = "measurement_variable",
+    values_to = "value"
+    ) 
+```
+
+#### 3.4.2.8. Analysis of ready-processed data (dictionary.csv)
+
+```{r}
+# Load necessary libraries
+library(tidyverse)
+
+# Import dictionary.csv
+raw_data <- read_csv(here::here("data/processed/dictionary.csv"))
+
+# Create a data frame for dictionary.csv
+dictionary_data <- data.frame(
+  variable_name = c("date", "region", "community", "depth", "water_level", "pump_rate", "drawdown", "material"),
+  description = c("date_of_observation", "region_of_observation", "community_of_observation", "depth_of_well", "static_water_level", "pumping_rate", "drawdown_of_water_level", "material_of_aquifer"))
+
+# Write the data frame to dictionary.csv
+write_csv(dictionary_data, "dictionary_data")
+
+
+# Add another column with names
+new_dictionary_data <- dictionary_data |> 
+  mutate(units = c("NA", "NA", "NA", "m", "m", "l/min", "m", "NA"))
+
+
+# Display the updated dictionary
+print(new_dictionary_data)
+
+
+# Pivot the data
+pivoted_data <- new_dictionary_data |> 
+  pivot_wider(names_from = variable_name, values_from = c(description, units), names_sep = "_")
+
+new_pivoted_data <- data.frame(
+  date_of_observation = c("2001-01-01", "2001-01-02", "2001-01-03"),
+  region_of_observation = c("Greater_Accra", "Greater_Accra", "Ashanti"),  
+  community_of_observation = c("Agbleazaa", "La_Court", "Kotei"),
+  depth_of_well_m = c(10, 15, 20),
+  static_water_level_m = c(5, 8, 12),
+  pumping_rate_l_min = c(20, 25, 30),
+  drawdown_of_water_level_m = c(2, 3, 4),
+  material_of_aquifer = c("Schist", "Gneiss", "Schist"))  
+
+# Data preprocessing
+processed_data <- new_pivoted_data 
+  
+# Select relevant columns for analysis
+processed_data |> 
+  select(
+    date_of_observation,
+    region_of_observation,
+    community_of_observation,
+    depth_of_well_m,
+    static_water_level_m,
+    pumping_rate_l_min,
+    drawdown_of_water_level_m,
+    material_of_aquifer
+  )
+  
+
+
+# Load the 'here' package
+library(here)
+library(readr)
+
+
+# Generate the path using here()
+new_processed_data <- here("data", "processed", "processed_data.csv")
+
+# Ensure the directory exists
+if (!dir.exists(dirname(new_processed_data))) {
+  dir.create(dirname(new_processed_data), recursive = TRUE)
+}
+
+
+# Write the CSV file using here()
+readr::write_csv(processed_data, new_processed_data)
 ```
 
 # 4. Results and Discussion
