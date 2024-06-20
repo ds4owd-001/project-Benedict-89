@@ -1,1 +1,13 @@
-variable_name,description
+Depth: It refers to the vertical distance from the surface of the ground to the bottom of the borehole. It is typically measured in meters (m). The depth of a borehole determines how deep the drilling process goes to reach the desired aquifer or geological layer
+
+Static Water Level: It is the level of water in the borehole when no pumping is taking place. It is measured from the ground surface down to the water surface inside the borehole. This measurement is crucial for determining the natural water table level and the initial conditions of the aquifer.
+
+Drawdown: It is the difference between the static water level and the water level in the borehole after pumping has started. It indicates how much the water level has dropped due to pumping and is measured in meters (m). Drawdown helps in understanding the impact of pumping on the aquifer and is essential for calculating the sustainable yield of the borehole.
+
+Pumping Rate: It is the volume of water being extracted from the borehole per unit of time, typically measured in liters per minute (l/min). This rate is essential for determining the efficiency and capacity of the borehole, as well as for designing the pump system.
+
+Specific Capacity: It is a measure of the productivity of a borehole, defined as the pumping rate per unit drawdown. It is expressed in terms of volume per unit time per unit drawdown, commonly m³/day per meter of drawdown, which can be simplified to m²/day. This parameter helps in assessing the efficiency of the borehole and the aquifer's ability to transmit water to the borehole.
+
+Transmissivity: It is the measure of how much water can be transmitted horizontally through the aquifer material over a unit width and is measured in cubic meters per day (m³/day). It is a product of the hydraulic conductivity of the aquifer and the saturated thickness of the aquifer. High transmissivity indicates a highly productive aquifer.
+
+Aquifer Material: It refers to the type of geological materials (such as sand, gravel, limestone, or sandstone) that make up the aquifer from which the borehole extracts water. The characteristics of these materials, including their porosity and permeability, influence the aquifer's ability to store and transmit water. Understanding the aquifer material is critical for assessing the water quality and the potential yield of the borehole.

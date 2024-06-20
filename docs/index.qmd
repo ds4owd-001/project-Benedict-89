@@ -1,7 +1,7 @@
 ---
 title: "My Capstone Project"
-format: 
-  html:   
+format:
+  html: 
     toc: true
     code-fold: true
     embed-resources: true
@@ -254,8 +254,9 @@ transformed_data |>
 transformed_data |>
   select(community)
 
+
 #summarise
-transformed_data |>
+summary_stats <- transformed_data |>
   summarise(
     avg_depth = mean(depth_m, na.rm = TRUE),
     max_pump_rate = max(pump_rate_l_min, na.rm = TRUE),
@@ -265,7 +266,7 @@ transformed_data |>
   )
 
 #groupby
-transformed_data |>
+grouped_summary <- transformed_data |>
   group_by(region) |> 
   summarise(
     count = n(),
@@ -273,6 +274,42 @@ transformed_data |>
     max_pump_rate = max(pump_rate_l_min, na.rm = TRUE),
     min_water_level = min(water_level_m, na.rm = TRUE)
   )
+
+
+#load Package
+library(dplyr)
+library(knitr)
+
+# Assuming you have a data frame named 'transformed_data'
+summary_stats <- transformed_data |>
+  summarise(
+    avg_depth = mean(depth_m, na.rm = TRUE),
+    max_pump_rate = max(pump_rate_l_min, na.rm = TRUE),
+    min_water_level = min(water_level_m, na.rm = TRUE),
+    unique_rock_types = n_distinct(rock_type, na.rm = TRUE),
+    total_records = n()
+  )
+
+# Convert the summary statistics to a data frame
+summary_stats_df <- as.data.frame(t(summary_stats))
+
+# Rename the column
+colnames(summary_stats_df) <- "Value"
+
+# Add a row with statistic names
+statistic_names <- c("Average Depth (m)", "Maximum Pump Rate (l/min)", "Minimum Water Level (m)", "Unique Rock Types", "Total Records")
+summary_stats_df <- rbind(statistic_names, summary_stats_df)
+
+# Print the formatted table
+kable(summary_stats_df, row.names = NA, align = "l")
+
+
+#Convert the grouped summary to a data frame
+grouped_summary_df <- as.data.frame(grouped_summary)
+
+# Print the formatted table
+kable(grouped_summary_df, caption = "Summary Statistics by Region", align = "c")
+
 
 #count the number of records for each communit
 transformed_data |>
@@ -310,69 +347,94 @@ transformed_data |>
 #load the required packages
 library(ggplot2)
 
-# create a scatter plot of Depth vs. Static Water Level
+## Scatter Plot
+#| label: fig-scatter
+#| fig-cap: "Scatter plot of depth vs. water level"
 scatter_plot <- transformed_data |>
-  ggplot(aes(x = `depth_m`, y = `water_level_m`)) +
+  ggplot(aes(x = depth_m, y = water_level_m)) +
   geom_point() +
-  labs(title = "Scatter Plot of depth vs. water_level", x = "depth (m)", y = "water_level (m)") +
+  labs(title = "Fig1: Scatter plot of depth vs. water level",
+       x = "Depth (m)",
+       y = "Water Level (m)") +
   theme_minimal()
 
-# display the scatter plot
+# Display the scatter plot
 print(scatter_plot)
 
-# Save the plot as a .png file
-ggsave("scatter_plot.png", plot = scatter_plot, width = 6, height = 4, units = "in", dpi = 300)
+# Save the scatter plot as a .png file
+ggsave("Fig_1_scatter_plot.png",
+       plot = scatter_plot,
+       width = 6,
+       height = 4,
+       units = "in",
+       dpi = 300)
+```
 
+```{r}
+#load the required packages
+library(ggplot2)
 
-
-#create a histogram of Pumping Rate
+#| label: fig-histogram-pumprate
+#| fig-cap: "Histogram of Pumping Rate"
 histogram <- transformed_data |>
-  ggplot(aes(x = `pump_rate_l_min`)) +
-  geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.9) +
-  labs(title = "Histogram of Pumping Rate", x = "Pumping Rate (l/min)", y = "Frequency") +
-  theme_minimal()
+ggplot(aes(x = pump_rate_l_min)) +
+geom_histogram(binwidth = 5, fill = "skyblue", color = "black", alpha = 0.9) +
+labs(title = "Fig_2: Histogram of Pumping Rate", x = "Pumping Rate (l/min)", y = "Frequency") +
+theme_minimal()
 
 # display the histogram
 print(histogram)
 
-# Save the plot as a .png file
-ggsave("histogram.png", plot = histogram, width = 6, height = 4, units = "in", dpi = 300)
+#Save the plot as a .png file
+ggsave("histogram.png", 
+       plot = histogram, 
+       width = 6, 
+       height = 4, 
+       units = "in", 
+       dpi = 300)
 
+```
 
+```{r}
+#load package
+library(ggplot2)
 
-#create a bar plot of Aquifer material
+#| label: fig-bar-rocktype
+#| fig-cap: "Bar Plot of Aquifer Material"
 bar_plot <- transformed_data |>
-  ggplot(aes(x = factor(`rock_type`))) +
-  geom_bar(aes(fill = factor(`rock_type`)), width = 0.5) +
-  labs(title = "Bar Plot of Aquifer Material", x = "Rock Type", y = "Count") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  scale_fill_manual(values = c("lightblue", "lightgreen", "lightpink", "lightyellow"))
+ggplot(aes(x = factor(rock_type))) +
+geom_bar(aes(fill = factor(rock_type)), width = 0.5) +
+labs(title = "Fig_3: Bar Plot of Aquifer Material", x = "Rock Type", y = "Count") +
+theme_minimal() +
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+scale_fill_manual(values = c("lightblue", "lightgreen", "lightpink", "lightyellow"))
 
 # Display the bar plot
 print(bar_plot)
 
-# Save the plot as a .png file
+#Save the plot as a .png file
 ggsave("bar_plot.png", plot = bar_plot, width = 6, height = 4, units = "in", dpi = 300)
+```
 
-  
-  
-# Convert depth_m to factor
+```{r}
+#load package
+library(ggplot2)
+
+#| label: fig-box-drawdown
+#| fig-cap: "Boxplot of Drawdown by Depth"
 transformed_data$depth_m <- as.factor(transformed_data$depth_m)
-
-# Create a boxplot for each depth level
 box_plot <- transformed_data |>
-  ggplot(aes(x = depth_m, y = drawdown_m, fill = depth_m)) +
-  geom_boxplot() +
-  geom_jitter(shape = 16, position = position_jitter(0.4), color = "black", alpha = 1.5) +
-  labs(title = "Boxplot of Drawdown by Depth", x = "Depth (m)", y = "Drawdown (m)") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+ggplot(aes(x = depth_m, y = drawdown_m, fill = depth_m)) +
+geom_boxplot() +
+geom_jitter(shape = 16, position = position_jitter(0.4), color = "black", alpha = 1.5) +
+labs(title = "Fig_4: Boxplot of Drawdown by Depth", x = "Depth (m)", y = "Drawdown (m)") +
+theme_minimal() +
+theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 # Display the box plot
 print(box_plot)
 
-# Save the plot as a .png file
+#Save the plot as a .png file
 ggsave("box_plot.png", plot = box_plot, width = 6, height = 4, units = "in", dpi = 300)
 ```
 
